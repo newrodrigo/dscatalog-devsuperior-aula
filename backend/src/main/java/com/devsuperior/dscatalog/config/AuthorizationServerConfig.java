@@ -32,20 +32,20 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	private Integer jwtDuration;
 	
 	@Autowired
-	private BCryptPasswordEncoder passwordEncode;
+	private BCryptPasswordEncoder passwordEncoder;
 	
 	@Autowired
-	private JwtAccessTokenConverter accessTokenConverter; 
+	private JwtAccessTokenConverter accessTokenConverter;
 	
 	@Autowired
-	private JwtTokenStore tokeStore;
+	private JwtTokenStore tokenStore;
 	
 	@Autowired
 	private AuthenticationManager authenticationManager;
 	
 	@Autowired
 	private JwtTokenEnhancer tokenEnhancer;
-	
+
 	@Override
 	public void configure(AuthorizationServerSecurityConfigurer security) throws Exception {
 		security.tokenKeyAccess("permitAll()").checkTokenAccess("isAuthenticated()");
@@ -55,7 +55,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory()
 		.withClient(clientId)
-		.secret(passwordEncode.encode(clientSecret))
+		.secret(passwordEncoder.encode(clientSecret))
 		.scopes("read", "write")
 		.authorizedGrantTypes("password")
 		.accessTokenValiditySeconds(jwtDuration);
@@ -64,11 +64,14 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
 		
+		endpoints.authenticationManager(authenticationManager)
+		.tokenStore(tokenStore)
+		.accessTokenConverter(accessTokenConverter);
 		TokenEnhancerChain chain = new TokenEnhancerChain();
 		chain.setTokenEnhancers(Arrays.asList(accessTokenConverter, tokenEnhancer));
 		
 		endpoints.authenticationManager(authenticationManager)
-		.tokenStore(tokeStore)
+		.tokenStore(tokenStore)
 		.accessTokenConverter(accessTokenConverter)
 		.tokenEnhancer(chain);
 	}
