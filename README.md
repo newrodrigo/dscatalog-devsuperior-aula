@@ -1,5 +1,5 @@
 # DS Catalog
-[![NPM](https://img.shields.io/npm/l/react)](https://github.com/newrodrigo/dscatalog-devsuperior-aula/tree/main)
+[![NPM](https://img.shields.io/npm/l/react)](https://github.com/newrodrigo/dscatalog-devsuperior-aula/blob/main/LICENSE)
 
 ## Sobre o projeto
 O DS Catalog é o resultado da construção de um backend durante o Bootcamp Java Spring da [DevSuperior](https://devsuperior.com.br/).
